@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>Rainero Culinaria 4.0 - Plataforma Educativa</title>
+  <meta name="description" content="Plataforma educativa de gastronomía - Centro Municipal Santiago Rainero, Vicente López">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#7B2D8E">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --violet: #7B2D8E;
+  --green: #7AB929;
+  --teal: #00A19A;
+  --grad-main: linear-gradient(135deg, #7B2D8E, #00A19A, #7AB929);
+  --grad-violet: linear-gradient(135deg, #7B2D8E, #9B4DB8);
+  --grad-green: linear-gradient(135deg, #7AB929, #8FD93E);
+  --bg: #F8FAFC;
+  --text: #1E293B;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --border: rgba(0,0,0,0.08);
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  --transition: all 0.3s ease;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
+
+.bg-animated {
+  position: fixed; inset: 0; z-index: -2;
+  background: linear-gradient(-45deg, #E8F5E9, #E1F5FE, #F3E5F5, #E0F2F1, #FFF8E1);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+@keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.bg-shapes { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.shape { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.3; }
+.shape-1 { width: 300px; height: 300px; background: var(--violet); top: -100px; left: -100px; animation: float1 20s ease-in-out infinite; }
+.shape-2 { width: 250px; height: 250px; background: var(--green); bottom: -80px; right: -80px; animation: float2 18s ease-in-out infinite; }
+.shape-3 { width: 200px; height: 200px; background: var(--teal); top: 40%; left: 50%; animation: float3 22s ease-in-out infinite; }
+@keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 30px); } }
+@keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -20px); } }
+@keyframes float3 { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, -60%); } }
+
+.portal { min-height: 100dvh; display: flex; flex-direction: column; }
+
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-brand { display: flex; align-items: center; gap: 12px; }
+.header-logo { width: 40px; height: 40px; border-radius: 10px; }
+.header-text h1 { font-size: 1rem; color: var(--violet); line-height: 1.2; }
+.header-text span { font-size: 0.65rem; color: var(--teal); font-weight: 700; }
+.mvl-logo { height: 44px; cursor: pointer; transition: var(--transition); }
+.mvl-logo:hover { transform: scale(1.05); }
+
+.main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 32px 20px 40px; }
+.hero-logo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: var(--shadow-lg); margin-bottom: 24px; }
+.hero-title { text-align: center; margin-bottom: 8px; }
+.hero-title h2 { font-size: 2rem; color: var(--violet); }
+.hero-subtitle { font-size: 1rem; color: var(--text-secondary); text-align: center; margin-bottom: 32px; }
+
+.products { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 500px; }
+.product-card {
+  display: flex; align-items: center; gap: 16px; padding: 20px;
+  background: rgba(255,255,255,0.95); border-radius: var(--radius);
+  box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);
+  text-decoration: none; color: inherit; border: 2px solid transparent;
+}
+.product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.product-card:active { transform: scale(0.98); }
+.product-card.culinaria:hover { border-color: var(--violet); }
+.product-card.kids:hover { border-color: var(--green); }
+.product-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+.product-card.culinaria .product-icon { background: rgba(123,45,142,0.12); }
+.product-card.kids .product-icon { background: rgba(122,185,41,0.12); }
+.product-info { flex: 1; }
+.product-info h3 { font-size: 1.1rem; margin-bottom: 4px; color: var(--text); }
+.product-info p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
+.product-badge { padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+.product-badge.active { background: rgba(122,185,41,0.15); color: var(--green); }
+.product-badge.new { background: rgba(123,45,142,0.15); color: var(--violet); }
+.product-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--bg); border-radius: 50%; color: var(--text-muted); transition: var(--transition); font-weight: bold; }
+.product-card:hover .product-arrow { background: var(--violet); color: white; }
+.product-card.kids:hover .product-arrow { background: var(--green); }
+
+.footer { padding: 24px 20px; text-align: center; background: rgba(255,255,255,0.5); border-top: 1px solid var(--border); }
+.footer p { font-size: 0.8rem; color: var(--text-secondary); }
+.footer-dev { margin-top: 6px; font-size: 0.7rem; color: var(--text-muted); }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  z-index: 1000; display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; visibility: hidden; transition: var(--transition);
+}
+.modal-overlay.show { opacity: 1; visibility: visible; }
+.modal { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 380px; transform: scale(0.9); transition: var(--transition); overflow: hidden; }
+.modal-overlay.show .modal { transform: scale(1); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border); }
+.modal-header h2 { font-size: 1.1rem; }
+.modal-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--bg); border: none; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
+.modal-body { padding: 20px; }
+.modal-footer { padding: 16px 20px; background: var(--bg); }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
+.form-input { width: 100%; padding: 12px 16px; background: white; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: var(--transition); }
+.form-input:focus { outline: none; border-color: var(--violet); }
+.btn { width: 100%; padding: 14px; background: var(--grad-violet); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: var(--transition); }
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.dev-panel { position: fixed; inset: 0; background: #0F172A; z-index: 2000; display: none; flex-direction: column; color: white; overflow: hidden; }
+.dev-panel.show { display: flex; }
+.dev-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+.dev-back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border: none; border-radius: 10px; cursor: pointer; color: white; font-size: 1.2rem; }
+.dev-header h1 { flex: 1; font-size: 1.1rem; }
+.dev-badge { padding: 5px 12px; background: var(--green); border-radius: var(--radius-full); font-size: 0.65rem; font-weight: 700; }
+.dev-content { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+.dev-welcome { background: linear-gradient(135deg, rgba(123,45,142,0.4), rgba(0,161,154,0.4)); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+.dev-welcome h2 { font-size: 1.2rem; margin-bottom: 4px; }
+.dev-welcome p { opacity: 0.8; font-size: 0.85rem; }
+.dev-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+.dev-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; text-align: center; }
+.dev-stat-value { font-size: 1.4rem; font-weight: 800; color: var(--green); }
+.dev-stat-label { font-size: 0.65rem; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 2px; }
+.dev-section { margin-bottom: 24px; }
+.dev-section-title { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.dev-product { display: flex; align-items: center; gap: 12px; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
+.dev-product:hover { background: rgba(255,255,255,0.1); }
+.dev-product-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+.dev-product.culinaria .dev-product-icon { background: rgba(123,45,142,0.3); }
+.dev-product.kids .dev-product-icon { background: rgba(122,185,41,0.3); }
+.dev-product.planned .dev-product-icon { background: rgba(255,255,255,0.1); }
+.dev-product-info { flex: 1; }
+.dev-product-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
+.dev-product-info p { font-size: 0.7rem; color: rgba(255,255,255,0.6); }
+.dev-status { padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.6rem; font-weight: 700; }
+.dev-status.live { background: rgba(122,185,41,0.2); color: var(--green); }
+.dev-status.planned { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.dev-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.dev-action { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; cursor: pointer; transition: var(--transition); }
+.dev-action:hover { background: rgba(123,45,142,0.3); border-color: var(--violet); }
+.dev-action span:first-child { font-size: 1.4rem; }
+.dev-action span:last-child { font-size: 0.75rem; font-weight: 600; }
+
+.toast { position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(100px); background: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; z-index: 3000; opacity: 0; transition: var(--transition); box-shadow: var(--shadow-lg); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (min-width: 768px) {
+  .header { padding: 20px 40px; }
+  .header-logo { width: 48px; height: 48px; }
+  .header-text h1 { font-size: 1.2rem; }
+  .mvl-logo { height: 52px; }
+  .main { padding: 48px 40px 60px; }
+  .hero-logo { width: 150px; height: 150px; }
+  .hero-title h2 { font-size: 2.5rem; }
+  .products { max-width: 600px; gap: 20px; }
+  .product-card { padding: 24px; gap: 20px; }
+  .product-icon { width: 70px; height: 70px; font-size: 2rem; }
+  .product-info h3 { font-size: 1.25rem; }
+  .dev-content { padding: 30px; }
+  .dev-actions { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  .header { padding: 24px 60px; }
+  .main { padding: 60px; justify-content: center; }
+  .hero-logo { width: 160px; height: 160px; }
+  .hero-title h2 { font-size: 3rem; }
+  .products { flex-direction: row; max-width: 900px; }
+  .product-card { flex: 1; flex-direction: column; text-align: center; padding: 32px 24px; position: relative; }
+  .product-icon { width: 80px; height: 80px; font-size: 2.2rem; margin: 0 auto 16px; }
+  .product-arrow { position: absolute; bottom: 16px; right: 16px; }
+  .dev-content { max-width: 800px; margin: 0 auto; }
+  .dev-stats { grid-template-columns: repeat(4, 1fr); }
+  .dev-actions { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .main { padding: 20px; flex-direction: row; gap: 40px; }
+  .hero-logo { width: 80px; height: 80px; margin-bottom: 0; }
+  .hero-title h2 { font-size: 1.5rem; }
+  .products { flex-direction: row; }
+}
+  </style>
+</head>
+<body>
+<div class="bg-animated"></div>
+<div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div><div class="shape shape-3"></div></div>
+
+<div class="portal">
+  <header class="header">
+    <div class="header-brand">
+      <img src="logo.png" alt="Rainero" class="header-logo">
+      <div class="header-text"><h1>Rainero Culinaria</h1><span>Plataforma 4.0</span></div>
+    </div>
+    <img src="logo_mvl.png" alt="Vivamos Vicente López" class="mvl-logo" id="mvl-logo">
+  </header>
+
+  <main class="main">
+    <img src="logo.png" alt="Rainero Culinaria" class="hero-logo">
+    <div class="hero-title"><h2>Rainero Culinaria</h2></div>
+    <p class="hero-subtitle">Plataforma Educativa de Gastronomía</p>
+    <div class="products">
+      <a href="https://appculinaria.pages.dev" class="product-card culinaria">
+        <div class="product-icon">🎓</div>
+        <div class="product-info"><h3>Sistema Culinaria</h3><p>Formación profesional para alumnos y docentes</p></div>
+        <span class="product-badge active">Activo</span>
+        <div class="product-arrow">→</div>
+      </a>
+      <a href="https://rainerokids.pages.dev" class="product-card kids">
+        <div class="product-icon">👶</div>
+        <div class="product-info"><h3>Rainero Kids</h3><p>Programa infantil para niños, teens y familias</p></div>
+        <span class="product-badge new">Nuevo</span>
+        <div class="product-arrow">→</div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Centro Municipal de Capacitación Laboral Santiago Rainero</p>
+    <p class="footer-dev">Desarrollado por Mercedes Recalde · Sistema Recalde</p>
+  </footer>
+</div>
+
+<div class="modal-overlay" id="dev-modal" onclick="if(event.target===this)closeDevModal()">
+  <div class="modal">
+    <div class="modal-header"><h2>🔐 Acceso Dev</h2><button class="modal-close" onclick="closeDevModal()">✕</button></div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px">Panel exclusivo para administración del ecosistema</p>
+      <div class="form-group"><label>Email</label><input type="email" class="form-input" id="dev-email" placeholder="dev@sistemarecalde.com"></div>
+      <div class="form-group"><label>Clave</label><input type="password" class="form-input" id="dev-pass" placeholder="••••••••"></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="loginDev()">🚀 Ingresar</button></div>
+  </div>
+</div>
+
+<div class="dev-panel" id="dev-panel">
+  <header class="dev-header">
+    <button class="dev-back" onclick="closeDevPanel()">←</button>
+    <h1>Panel Dev</h1>
+    <span class="dev-badge">DEV</span>
+  </header>
+  <div class="dev-content">
+    <div class="dev-welcome"><h2>Bienvenida, Mercedes 👩‍💻</h2><p>Ecosistema Rainero Culinaria 4.0</p></div>
+    <div class="dev-stats">
+      <div class="dev-stat"><div class="dev-stat-value">2</div><div class="dev-stat-label">Productos</div></div>
+      <div class="dev-stat"><div class="dev-stat-value">7</div><div class="dev-stat-label">Módulos</div></div>
+      <div class="dev-stat"><div class="dev-stat-value">60+</div><div class="dev-stat-label">Usuarios</div></div>
+    </div>
+    <div class="dev-section">
+      <h3 class="dev-section-title">Productos</h3>
+      <div class="dev-product culinaria" onclick="window.open('https://appculinaria.pages.dev','_blank')">
+        <div class="dev-product-icon">🎓</div>
+        <div class="dev-product-info"><h4>Sistema Culinaria</h4><p>Alumnos · Docentes · Admin</p></div>
+        <span class="dev-status live">LIVE</span>
+      </div>
+      <div class="dev-product kids" onclick="window.open('https://rainerokids.pages.dev','_blank')">
+        <div class="dev-product-icon">👶</div>
+        <div class="dev-product-info"><h4>Rainero Kids</h4><p>Kids · Teens · Familias · Profes</p></div>
+        <span class="dev-status live">LIVE</span>
+      </div>
+      <div class="dev-product planned">
+        <div class="dev-product-icon">🏆</div>
+        <div class="dev-product-info"><h4>Rainero Competencias</h4><p>Torneos y eventos</p></div>
+        <span class="dev-status planned">PLAN</span>
+      </div>
+      <div class="dev-product planned">
+        <div class="dev-product-icon">🍽️</div>
+        <div class="dev-product-info"><h4>Rainero Catering</h4><p>Gestión de servicios</p></div>
+        <span class="dev-status planned">PLAN</span>
+      </div>
+    </div>
+    <div class="dev-section">
+      <h3 class="dev-section-title">Acciones</h3>
+      <div class="dev-actions">
+        <button class="dev-action" onclick="showToast('📊 Exportando...')"><span>📊</span><span>Exportar</span></button>
+        <button class="dev-action" onclick="showToast('🔄 Sincronizando...')"><span>🔄</span><span>Sync DB</span></button>
+        <button class="dev-action" onclick="showToast('📧 Próximamente')"><span>📧</span><span>Emails</span></button>
+        <button class="dev-action" onclick="showToast('📈 Generando...')"><span>📈</span><span>Reportes</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let devClicks=0,clickTimer=null;
+document.getElementById('mvl-logo').addEventListener('click',function(){devClicks++;clearTimeout(clickTimer);if(devClicks>=3){devClicks=0;openDevModal();}else{clickTimer=setTimeout(()=>devClicks=0,1000);}});
+function openDevModal(){document.getElementById('dev-modal').classList.add('show');}
+function closeDevModal(){document.getElementById('dev-modal').classList.remove('show');document.getElementById('dev-email').value='';document.getElementById('dev-pass').value='';}
+function loginDev(){const email=document.getElementById('dev-email').value.trim(),pass=document.getElementById('dev-pass').value;if((email==='mercedes@sistemarecalde.com'||email==='mercedes.recalde@mvl.edu.ar')&&pass==='dev2025'){closeDevModal();document.getElementById('dev-panel').classList.add('show');showToast('🚀 Bienvenida!');}else{showToast('❌ Credenciales incorrectas');}}
+function closeDevPanel(){document.getElementById('dev-panel').classList.remove('show');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDevModal();closeDevPanel();}});
+</script>
+</body>
+</html>
