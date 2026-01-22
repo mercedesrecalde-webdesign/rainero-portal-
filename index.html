@@ -86,7 +86,7 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
 .mvl-logo:hover { transform: scale(1.05); }
 
 .main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 32px 20px 40px; }
-.hero-logo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: var(--shadow-lg); margin-bottom: 24px; }
+.hero-logo { width: 140px; height: 140px; border-radius: 20px; object-fit: contain; background: white; padding: 10px; box-shadow: var(--shadow-lg); margin-bottom: 24px; }
 .hero-title { text-align: center; margin-bottom: 8px; }
 .hero-title h2 { font-size: 2rem; color: var(--violet); }
 .hero-subtitle { font-size: 1rem; color: var(--text-secondary); text-align: center; margin-bottom: 32px; }
@@ -100,11 +100,21 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
 }
 .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
 .product-card:active { transform: scale(0.98); }
-.product-card.culinaria:hover { border-color: var(--violet); }
+.product-card.academia:hover { border-color: var(--violet); }
 .product-card.kids:hover { border-color: var(--green); }
-.product-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
-.product-card.culinaria .product-icon { background: rgba(123,45,142,0.12); }
-.product-card.kids .product-icon { background: rgba(122,185,41,0.12); }
+.product-logo-float { 
+  width: 80px; height: 80px; 
+  border-radius: 50%; 
+  display: flex; align-items: center; justify-content: center; 
+  flex-shrink: 0; 
+  background: white;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  transition: var(--transition);
+  overflow: hidden;
+}
+.product-card:hover .product-logo-float { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 35px rgba(0,0,0,0.2); }
+.logo-academia-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.logo-kids-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .product-info { flex: 1; }
 .product-info h3 { font-size: 1.1rem; margin-bottom: 4px; color: var(--text); }
 .product-info p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
@@ -159,7 +169,7 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
 .dev-product { display: flex; align-items: center; gap: 12px; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
 .dev-product:hover { background: rgba(255,255,255,0.1); }
 .dev-product-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-.dev-product.culinaria .dev-product-icon { background: rgba(123,45,142,0.3); }
+.dev-product.academia .dev-product-icon { background: rgba(123,45,142,0.3); }
 .dev-product.kids .dev-product-icon { background: rgba(122,185,41,0.3); }
 .dev-product.planned .dev-product-icon { background: rgba(255,255,255,0.1); }
 .dev-product-info { flex: 1; }
@@ -183,11 +193,11 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
   .header-text h1 { font-size: 1.2rem; }
   .mvl-logo { height: 52px; }
   .main { padding: 48px 40px 60px; }
-  .hero-logo { width: 150px; height: 150px; }
+  .hero-logo { width: 180px; height: 180px; }
   .hero-title h2 { font-size: 2.5rem; }
   .products { max-width: 600px; gap: 20px; }
   .product-card { padding: 24px; gap: 20px; }
-  .product-icon { width: 70px; height: 70px; font-size: 2rem; }
+  .product-logo-float { width: 90px; height: 90px; }
   .product-info h3 { font-size: 1.25rem; }
   .dev-content { padding: 30px; }
   .dev-actions { grid-template-columns: repeat(3, 1fr); }
@@ -195,11 +205,11 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
 @media (min-width: 1024px) {
   .header { padding: 24px 60px; }
   .main { padding: 60px; justify-content: center; }
-  .hero-logo { width: 160px; height: 160px; }
+  .hero-logo { width: 200px; height: 200px; }
   .hero-title h2 { font-size: 3rem; }
   .products { flex-direction: row; max-width: 900px; }
   .product-card { flex: 1; flex-direction: column; text-align: center; padding: 32px 24px; position: relative; }
-  .product-icon { width: 80px; height: 80px; font-size: 2.2rem; margin: 0 auto 16px; }
+  .product-logo-float { width: 100px; height: 100px; margin: 0 auto 16px; }
   .product-arrow { position: absolute; bottom: 16px; right: 16px; }
   .dev-content { max-width: 800px; margin: 0 auto; }
   .dev-stats { grid-template-columns: repeat(4, 1fr); }
@@ -220,25 +230,29 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
 <div class="portal">
   <header class="header">
     <div class="header-brand">
-      <img src="logo.png" alt="Rainero" class="header-logo">
+      <img src="logo_culinaria.png" alt="Rainero Culinaria" class="header-logo">
       <div class="header-text"><h1>Rainero Culinaria</h1><span>Plataforma 4.0</span></div>
     </div>
     <img src="logo_mvl.png" alt="Vivamos Vicente López" class="mvl-logo" id="mvl-logo">
   </header>
 
   <main class="main">
-    <img src="logo.png" alt="Rainero Culinaria" class="hero-logo">
+    <img src="logo_culinaria.png" alt="Rainero Culinaria 4.0" class="hero-logo">
     <div class="hero-title"><h2>Rainero Culinaria</h2></div>
     <p class="hero-subtitle">Plataforma Educativa de Gastronomía</p>
     <div class="products">
-      <a href="https://appculinaria.pages.dev" class="product-card culinaria">
-        <div class="product-icon">🎓</div>
-        <div class="product-info"><h3>Sistema Culinaria</h3><p>Formación profesional para alumnos y docentes</p></div>
+      <a href="https://appculinaria.pages.dev" class="product-card academia">
+        <div class="product-logo-float">
+          <img src="logo_academia.jpg" alt="Rainero Academia" class="logo-academia-img">
+        </div>
+        <div class="product-info"><h3>Rainero Academia</h3><p>Formación profesional para alumnos y docentes</p></div>
         <span class="product-badge active">Activo</span>
         <div class="product-arrow">→</div>
       </a>
       <a href="https://rainerokids.pages.dev" class="product-card kids">
-        <div class="product-icon">👶</div>
+        <div class="product-logo-float">
+          <img src="logo.png" alt="Rainero Kids" class="logo-kids-img">
+        </div>
         <div class="product-info"><h3>Rainero Kids</h3><p>Programa infantil para niños, teens y familias</p></div>
         <span class="product-badge new">Nuevo</span>
         <div class="product-arrow">→</div>
@@ -279,9 +293,9 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
     </div>
     <div class="dev-section">
       <h3 class="dev-section-title">Productos</h3>
-      <div class="dev-product culinaria" onclick="window.open('https://appculinaria.pages.dev','_blank')">
+      <div class="dev-product academia" onclick="window.open('https://appculinaria.pages.dev','_blank')">
         <div class="dev-product-icon">🎓</div>
-        <div class="dev-product-info"><h4>Sistema Culinaria</h4><p>Alumnos · Docentes · Admin</p></div>
+        <div class="dev-product-info"><h4>Rainero Academia</h4><p>Alumnos · Docentes · Admin</p></div>
         <span class="dev-status live">LIVE</span>
       </div>
       <div class="dev-product kids" onclick="window.open('https://rainerokids.pages.dev','_blank')">
