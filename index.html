@@ -14,14 +14,13 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
 :root {
   --violet: #7B2D8E;
   --green: #7AB929;
   --teal: #00A19A;
   --grad-main: linear-gradient(135deg, #7B2D8E, #00A19A, #7AB929);
-  --grad-violet: linear-gradient(135deg, #7B2D8E, #9B4DB8);
-  --grad-green: linear-gradient(135deg, #7AB929, #8FD93E);
   --bg: #F8FAFC;
   --text: #1E293B;
   --text-secondary: #64748B;
@@ -30,260 +29,357 @@
   --shadow: 0 4px 20px rgba(0,0,0,0.08);
   --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
   --radius: 16px;
-  --radius-lg: 24px;
   --radius-full: 9999px;
   --transition: all 0.3s ease;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { height: 100%; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100%;
-  min-height: 100dvh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
-}
-h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
-
-.bg-animated {
-  position: fixed; inset: 0; z-index: -2;
-  background: linear-gradient(-45deg, #E8F5E9, #E1F5FE, #F3E5F5, #E0F2F1, #FFF8E1);
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: linear-gradient(-45deg, #E8F5E9, #E1F5FE, #F3E5F5, #E0F2F1);
   background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  animation: gradientBG 15s ease infinite;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
-@keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-.bg-shapes { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-.shape { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.3; }
-.shape-1 { width: 300px; height: 300px; background: var(--violet); top: -100px; left: -100px; animation: float1 20s ease-in-out infinite; }
-.shape-2 { width: 250px; height: 250px; background: var(--green); bottom: -80px; right: -80px; animation: float2 18s ease-in-out infinite; }
-.shape-3 { width: 200px; height: 200px; background: var(--teal); top: 40%; left: 50%; animation: float3 22s ease-in-out infinite; }
-@keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 30px); } }
-@keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -20px); } }
-@keyframes float3 { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, -60%); } }
+@keyframes gradientBG {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+h1, h2, h3 { font-family: 'Nunito', sans-serif; font-weight: 800; }
 
-.portal { min-height: 100dvh; display: flex; flex-direction: column; }
+/* ========== HEADER DISTRITO GOOGLE ========== */
+.distrito-header {
+  background: #fff;
+  padding: 12px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid #f0f0f0;
+}
+.distrito-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  z-index: 10;
+  position: relative;
+}
+.distrito-text .blue { color: #4285F4; }
+.distrito-text .red { color: #EA4335; }
+.distrito-text .yellow { color: #FBBC05; }
+.distrito-text .green { color: #34A853; }
 
+/* CONFETTI CSS PURO */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  opacity: 0;
+  animation: confettiFall 3s ease-in-out infinite;
+}
+.confetti:nth-child(1) { left: 5%; background: #4285F4; animation-delay: 0s; }
+.confetti:nth-child(2) { left: 15%; background: #EA4335; animation-delay: 0.3s; }
+.confetti:nth-child(3) { left: 25%; background: #FBBC05; animation-delay: 0.6s; }
+.confetti:nth-child(4) { left: 35%; background: #34A853; animation-delay: 0.9s; }
+.confetti:nth-child(5) { left: 45%; background: #4285F4; animation-delay: 0.2s; }
+.confetti:nth-child(6) { left: 55%; background: #EA4335; animation-delay: 0.5s; }
+.confetti:nth-child(7) { left: 65%; background: #FBBC05; animation-delay: 0.8s; }
+.confetti:nth-child(8) { left: 75%; background: #34A853; animation-delay: 0.1s; }
+.confetti:nth-child(9) { left: 85%; background: #4285F4; animation-delay: 0.4s; }
+.confetti:nth-child(10) { left: 95%; background: #EA4335; animation-delay: 0.7s; }
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(70px) rotate(360deg); opacity: 0; }
+}
+
+/* ========== HEADER RAINERO ========== */
 .header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 20px;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
 }
-.header-brand { display: flex; align-items: center; gap: 12px; }
-.header-logo { width: 40px; height: 40px; border-radius: 10px; }
-.header-text h1 { font-size: 1rem; color: var(--violet); line-height: 1.2; }
-.header-text span { font-size: 0.65rem; color: var(--teal); font-weight: 700; }
-.mvl-logo { height: 44px; cursor: pointer; transition: var(--transition); }
+.header-brand { display: flex; align-items: center; gap: 10px; }
+.header-logo { width: 45px; height: 45px; border-radius: 10px; }
+.header-text h1 { font-size: 1.1rem; color: var(--violet); line-height: 1; }
+.header-text span { font-size: 0.75rem; color: var(--teal); font-weight: 700; display: block; margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.edu-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, rgba(123,45,142,0.1), rgba(0,161,154,0.1));
+  border-radius: var(--radius-full);
+  cursor: pointer; position: relative;
+}
+.edu-badge:hover .edu-tooltip { opacity: 1; visibility: visible; transform: translateY(0); }
+.edu-badge-icon { font-size: 1.1rem; }
+.edu-badge-text { font-size: 0.75rem; font-weight: 600; color: var(--violet); }
+.edu-tooltip {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  width: 300px; background: white; border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); padding: 20px;
+  opacity: 0; visibility: hidden; transform: translateY(-10px);
+  transition: var(--transition); z-index: 200;
+}
+.edu-tooltip h4 { font-size: 0.9rem; color: var(--violet); margin-bottom: 10px; }
+.edu-tooltip p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; }
+.edu-tooltip .edu-dev { font-size: 0.75rem; color: var(--teal); font-weight: 600; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+.mvl-logo { height: 48px; cursor: pointer; transition: var(--transition); }
 .mvl-logo:hover { transform: scale(1.05); }
 
-.main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 32px 20px 40px; }
-.hero-logo { width: 140px; height: 140px; border-radius: 20px; object-fit: contain; background: white; padding: 10px; box-shadow: var(--shadow-lg); margin-bottom: 24px; }
-.hero-title { text-align: center; margin-bottom: 8px; }
-.hero-title h2 { font-size: 2rem; color: var(--violet); }
-.hero-subtitle { font-size: 1rem; color: var(--text-secondary); text-align: center; margin-bottom: 32px; }
+/* ========== MAIN CONTENT ========== */
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 20px 30px;
+}
+.hero-logo {
+  width: 200px; height: 200px;
+  object-fit: contain;
+  margin-bottom: 10px;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); text-align: center; margin-bottom: 20px; font-weight: 500; }
 
-.products { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 500px; }
+/* ========== PRODUCTS ========== */
+.products { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 550px; }
 .product-card {
-  display: flex; align-items: center; gap: 16px; padding: 20px;
+  display: flex; align-items: center; gap: 18px; padding: 20px;
   background: rgba(255,255,255,0.95); border-radius: var(--radius);
   box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);
   text-decoration: none; color: inherit; border: 2px solid transparent;
 }
-.product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.product-card:active { transform: scale(0.98); }
+.product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
 .product-card.academia:hover { border-color: var(--violet); }
 .product-card.kids:hover { border-color: var(--green); }
-.product-logo-float { 
-  width: 80px; height: 80px; 
-  border-radius: 50%; 
-  display: flex; align-items: center; justify-content: center; 
-  flex-shrink: 0; 
-  background: white;
+.product-logo-float {
+  width: 100px; height: 100px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; background: white;
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  transition: var(--transition);
-  overflow: hidden;
+  transition: var(--transition); overflow: hidden;
 }
-.product-card:hover .product-logo-float { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 35px rgba(0,0,0,0.2); }
-.logo-academia-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-.logo-kids-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.product-card:hover .product-logo-float { transform: scale(1.08); }
+.logo-academia-img, .logo-kids-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .product-info { flex: 1; }
-.product-info h3 { font-size: 1.1rem; margin-bottom: 4px; color: var(--text); }
-.product-info p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
-.product-badge { padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+.product-info h3 { font-size: 1.3rem; margin-bottom: 6px; color: var(--text); }
+.product-info p { font-size: 0.95rem; color: var(--text-secondary); }
+.product-badge { padding: 5px 12px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
 .product-badge.active { background: rgba(122,185,41,0.15); color: var(--green); }
 .product-badge.new { background: rgba(123,45,142,0.15); color: var(--violet); }
-.product-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--bg); border-radius: 50%; color: var(--text-muted); transition: var(--transition); font-weight: bold; }
+.product-arrow {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg); border-radius: 50%;
+  color: var(--text-muted); font-size: 1.2rem; transition: var(--transition);
+}
 .product-card:hover .product-arrow { background: var(--violet); color: white; }
 .product-card.kids:hover .product-arrow { background: var(--green); }
 
-.footer { padding: 24px 20px; text-align: center; background: rgba(255,255,255,0.5); border-top: 1px solid var(--border); }
-.footer p { font-size: 0.8rem; color: var(--text-secondary); }
-.footer-dev { margin-top: 6px; font-size: 0.7rem; color: var(--text-muted); }
+/* ========== FOOTER ========== */
+.footer { padding: 20px; text-align: center; background: rgba(255,255,255,0.6); margin-top: 20px; }
+.footer p { font-size: 0.85rem; color: var(--text-secondary); }
+.footer-dev { margin-top: 6px; font-size: 0.75rem; color: var(--text-muted); }
 
+/* ========== RESPONSIVE ========== */
+@media (min-width: 768px) {
+  .distrito-text { font-size: 1.3rem; }
+  .header { padding: 14px 40px; }
+  .header-logo { width: 50px; height: 50px; }
+  .header-text h1 { font-size: 1.25rem; }
+  .main { padding: 25px 40px 35px; }
+  .hero-logo { width: 240px; height: 240px; }
+  .hero-subtitle { font-size: 1.4rem; }
+  .products { max-width: 650px; }
+  .product-card { padding: 24px; }
+  .product-logo-float { width: 110px; height: 110px; }
+  .product-info h3 { font-size: 1.4rem; }
+}
+@media (min-width: 1024px) {
+  .distrito-text { font-size: 1.4rem; }
+  .main { padding: 30px 50px 40px; }
+  .hero-logo { width: 280px; height: 280px; }
+  .hero-subtitle { font-size: 1.5rem; }
+  .products { flex-direction: row; max-width: 900px; gap: 30px; }
+  .product-card { flex: 1; flex-direction: column; text-align: center; padding: 30px 25px; position: relative; }
+  .product-logo-float { width: 120px; height: 120px; margin-bottom: 15px; }
+  .product-arrow { position: absolute; bottom: 20px; right: 20px; }
+}
+
+/* ========== MODALS & DEV PANEL ========== */
 .modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  z-index: 1000; display: flex; align-items: center; justify-content: center;
-  padding: 20px; opacity: 0; visibility: hidden; transition: var(--transition);
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+  opacity: 0; visibility: hidden; transition: var(--transition);
 }
 .modal-overlay.show { opacity: 1; visibility: visible; }
-.modal { background: white; border-radius: var(--radius-lg); width: 100%; max-width: 380px; transform: scale(0.9); transition: var(--transition); overflow: hidden; }
+.modal {
+  background: white; border-radius: var(--radius); width: 90%; max-width: 400px;
+  overflow: hidden; transform: scale(0.9); transition: var(--transition);
+}
 .modal-overlay.show .modal { transform: scale(1); }
-.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border); }
-.modal-header h2 { font-size: 1.1rem; }
-.modal-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--bg); border: none; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--border); }
+.modal-header h2 { font-size: 1.2rem; }
+.modal-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--bg); border: none; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
 .modal-body { padding: 20px; }
-.modal-footer { padding: 16px 20px; background: var(--bg); }
 .form-group { margin-bottom: 16px; }
-.form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
-.form-input { width: 100%; padding: 12px 16px; background: white; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: var(--transition); }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.form-input { width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; transition: var(--transition); }
 .form-input:focus { outline: none; border-color: var(--violet); }
-.btn { width: 100%; padding: 14px; background: var(--grad-violet); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: var(--transition); }
-.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.btn-primary { width: 100%; padding: 14px; background: var(--grad-main); border: none; border-radius: 10px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: var(--transition); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 
 .dev-panel { position: fixed; inset: 0; background: #0F172A; z-index: 2000; display: none; flex-direction: column; color: white; overflow: hidden; }
 .dev-panel.show { display: flex; }
-.dev-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-.dev-back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border: none; border-radius: 10px; cursor: pointer; color: white; font-size: 1.2rem; }
-.dev-header h1 { flex: 1; font-size: 1.1rem; }
-.dev-badge { padding: 5px 12px; background: var(--green); border-radius: var(--radius-full); font-size: 0.65rem; font-weight: 700; }
-.dev-content { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
-.dev-welcome { background: linear-gradient(135deg, rgba(123,45,142,0.4), rgba(0,161,154,0.4)); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
-.dev-welcome h2 { font-size: 1.2rem; margin-bottom: 4px; }
-.dev-welcome p { opacity: 0.8; font-size: 0.85rem; }
-.dev-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
-.dev-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; text-align: center; }
-.dev-stat-value { font-size: 1.4rem; font-weight: 800; color: var(--green); }
-.dev-stat-label { font-size: 0.65rem; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 2px; }
-.dev-section { margin-bottom: 24px; }
-.dev-section-title { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-.dev-product { display: flex; align-items: center; gap: 12px; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
+.dev-header { display: flex; align-items: center; gap: 14px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.dev-back { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border: none; border-radius: 10px; cursor: pointer; color: white; font-size: 1.3rem; }
+.dev-header h1 { flex: 1; font-size: 1.2rem; }
+.dev-badge { padding: 6px 14px; background: var(--green); border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; }
+.dev-content { flex: 1; overflow-y: auto; padding: 25px; }
+.dev-welcome { background: linear-gradient(135deg, rgba(123,45,142,0.4), rgba(0,161,154,0.4)); border-radius: var(--radius); padding: 25px; margin-bottom: 25px; }
+.dev-welcome h2 { font-size: 1.3rem; margin-bottom: 6px; }
+.dev-welcome p { opacity: 0.8; font-size: 0.9rem; }
+.dev-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
+.dev-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 18px; text-align: center; }
+.dev-stat-value { font-size: 1.6rem; font-weight: 800; color: var(--green); }
+.dev-stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 4px; }
+.dev-section { margin-bottom: 30px; }
+.dev-section-title { font-size: 0.8rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+.dev-product { display: flex; align-items: center; gap: 14px; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: var(--transition); }
 .dev-product:hover { background: rgba(255,255,255,0.1); }
-.dev-product-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+.dev-product-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
 .dev-product.academia .dev-product-icon { background: rgba(123,45,142,0.3); }
 .dev-product.kids .dev-product-icon { background: rgba(122,185,41,0.3); }
 .dev-product.planned .dev-product-icon { background: rgba(255,255,255,0.1); }
 .dev-product-info { flex: 1; }
-.dev-product-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
-.dev-product-info p { font-size: 0.7rem; color: rgba(255,255,255,0.6); }
-.dev-status { padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.6rem; font-weight: 700; }
+.dev-product-info h4 { font-size: 1rem; margin-bottom: 3px; }
+.dev-product-info p { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+.dev-status { padding: 5px 12px; border-radius: var(--radius-full); font-size: 0.65rem; font-weight: 700; }
 .dev-status.live { background: rgba(122,185,41,0.2); color: var(--green); }
 .dev-status.planned { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
-.dev-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.dev-action { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; cursor: pointer; transition: var(--transition); }
+.dev-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.dev-action { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; cursor: pointer; transition: var(--transition); }
 .dev-action:hover { background: rgba(123,45,142,0.3); border-color: var(--violet); }
-.dev-action span:first-child { font-size: 1.4rem; }
-.dev-action span:last-child { font-size: 0.75rem; font-weight: 600; }
-
-.toast { position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(100px); background: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; z-index: 3000; opacity: 0; transition: var(--transition); box-shadow: var(--shadow-lg); }
+.dev-action span:first-child { font-size: 1.6rem; }
+.dev-action span:last-child { font-size: 0.8rem; font-weight: 600; }
+.dev-inscripcion-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+.dev-inscripcion-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.dev-inscripcion-title { display: flex; align-items: center; gap: 12px; }
+.dev-inscripcion-title img { width: 40px; height: 40px; border-radius: 50%; }
+.dev-inscripcion-title h4 { font-size: 1rem; }
+.dev-toggle { position: relative; width: 52px; height: 28px; }
+.dev-toggle input { opacity: 0; width: 0; height: 0; }
+.dev-toggle-slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.2); border-radius: 14px; transition: 0.3s; }
+.dev-toggle-slider:before { content: ""; position: absolute; height: 22px; width: 22px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+.dev-toggle input:checked + .dev-toggle-slider { background: var(--green); }
+.dev-toggle input:checked + .dev-toggle-slider:before { transform: translateX(24px); }
+.dev-inscripcion-status { font-size: 0.75rem; padding: 5px 12px; border-radius: 20px; font-weight: 600; display: inline-block; margin-bottom: 14px; }
+.dev-inscripcion-status.open { background: rgba(122,185,41,0.2); color: #7AB929; }
+.dev-inscripcion-status.closed { background: rgba(239,68,68,0.2); color: #EF4444; }
+.dev-inscripcion-form { display: grid; gap: 12px; }
+.dev-inscripcion-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dev-input-group { display: flex; flex-direction: column; gap: 5px; }
+.dev-input-group label { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; }
+.dev-input-group input, .dev-input-group textarea { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px; color: white; font-size: 0.9rem; font-family: inherit; }
+.dev-input-group input:focus, .dev-input-group textarea:focus { outline: none; border-color: var(--violet); }
+.dev-input-group textarea { resize: none; min-height: 70px; }
+.dev-save-btn { background: var(--grad-main); border: none; border-radius: 10px; padding: 14px; color: white; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 10px; transition: var(--transition); }
+.dev-save-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(123,45,142,0.4); }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: white; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; z-index: 3000; opacity: 0; transition: var(--transition); box-shadow: var(--shadow-lg); }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-@media (min-width: 768px) {
-  .header { padding: 20px 40px; }
-  .header-logo { width: 48px; height: 48px; }
-  .header-text h1 { font-size: 1.2rem; }
-  .mvl-logo { height: 52px; }
-  .main { padding: 48px 40px 60px; }
-  .hero-logo { width: 180px; height: 180px; }
-  .hero-title h2 { font-size: 2.5rem; }
-  .products { max-width: 600px; gap: 20px; }
-  .product-card { padding: 24px; gap: 20px; }
-  .product-logo-float { width: 90px; height: 90px; }
-  .product-info h3 { font-size: 1.25rem; }
-  .dev-content { padding: 30px; }
-  .dev-actions { grid-template-columns: repeat(3, 1fr); }
-}
-@media (min-width: 1024px) {
-  .header { padding: 24px 60px; }
-  .main { padding: 60px; justify-content: center; }
-  .hero-logo { width: 200px; height: 200px; }
-  .hero-title h2 { font-size: 3rem; }
-  .products { flex-direction: row; max-width: 900px; }
-  .product-card { flex: 1; flex-direction: column; text-align: center; padding: 32px 24px; position: relative; }
-  .product-logo-float { width: 100px; height: 100px; margin: 0 auto 16px; }
-  .product-arrow { position: absolute; bottom: 16px; right: 16px; }
-  .dev-content { max-width: 800px; margin: 0 auto; }
-  .dev-stats { grid-template-columns: repeat(4, 1fr); }
-  .dev-actions { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-height: 500px) and (orientation: landscape) {
-  .main { padding: 20px; flex-direction: row; gap: 40px; }
-  .hero-logo { width: 80px; height: 80px; margin-bottom: 0; }
-  .hero-title h2 { font-size: 1.5rem; }
-  .products { flex-direction: row; }
-}
+@media (min-width: 768px) { .dev-actions { grid-template-columns: repeat(4, 1fr); } .dev-stats { grid-template-columns: repeat(4, 1fr); } }
   </style>
 </head>
 <body>
-<div class="bg-animated"></div>
-<div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div><div class="shape shape-3"></div></div>
 
-<div class="portal">
-  <header class="header">
-    <div class="header-brand">
-      <img src="logo_culinaria.png" alt="Rainero Culinaria" class="header-logo">
-      <div class="header-text"><h1>Rainero Culinaria</h1><span>Plataforma 4.0</span></div>
+<!-- HEADER DISTRITO GOOGLE CON CONFETTI -->
+<header class="distrito-header">
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <div class="confetti"></div>
+  <p class="distrito-text">
+    <span class="blue">Vicente</span> <span class="red">López</span> <span class="yellow">es</span>
+    <span class="blue">Dis</span><span class="green">tri</span><span class="red">to</span>
+    <span class="blue">G</span><span class="red">o</span><span class="yellow">o</span><span class="blue">g</span><span class="green">l</span><span class="red">e</span>
+  </p>
+</header>
+
+<!-- HEADER RAINERO -->
+<header class="header">
+  <div class="header-brand">
+    <img src="logo_culinaria.png" alt="Rainero Culinaria" class="header-logo">
+    <div class="header-text"><h1>Rainero Culinaria</h1><span>Plataforma 4.0</span></div>
+  </div>
+  <div class="header-right">
+    <div class="edu-badge">
+      <span class="edu-badge-icon">🎓</span>
+      <span class="edu-badge-text">Distrito Google</span>
+      <div class="edu-tooltip">
+        <h4>🌐 Educación Digital</h4>
+        <p>Plataforma educativa alineada con los estándares de <strong>Vicente López Distrito Google</strong>, promoviendo la innovación pedagógica y las competencias digitales del siglo XXI.</p>
+        <p>Integración de tecnología en la enseñanza culinaria para una educación de vanguardia.</p>
+        <div class="edu-dev">👩‍💻 Desarrollado por Mercedes Recalde</div>
+      </div>
     </div>
-    <img src="logo_mvl.png" alt="Vivamos Vicente López" class="mvl-logo" id="mvl-logo">
-  </header>
+    <img src="logo_mvl.png" alt="Vivamos Vicente López" class="mvl-logo" id="mvl-logo" onclick="handleMvlClick()">
+  </div>
+</header>
 
-  <main class="main">
-    <img src="logo_culinaria.png" alt="Rainero Culinaria 4.0" class="hero-logo">
-    <div class="hero-title"><h2>Rainero Culinaria</h2></div>
-    <p class="hero-subtitle">Plataforma Educativa de Gastronomía</p>
-    <div class="products">
-      <a href="https://appculinaria.pages.dev" class="product-card academia">
-        <div class="product-logo-float">
-          <img src="logo_academia.jpg" alt="Rainero Academia" class="logo-academia-img">
-        </div>
-        <div class="product-info"><h3>Rainero Academia</h3><p>Formación profesional para alumnos y docentes</p></div>
-        <span class="product-badge active">Activo</span>
-        <div class="product-arrow">→</div>
-      </a>
-      <a href="https://rainerokids.pages.dev" class="product-card kids">
-        <div class="product-logo-float">
-          <img src="logo.png" alt="Rainero Kids" class="logo-kids-img">
-        </div>
-        <div class="product-info"><h3>Rainero Kids</h3><p>Programa infantil para niños, teens y familias</p></div>
-        <span class="product-badge new">Nuevo</span>
-        <div class="product-arrow">→</div>
-      </a>
-    </div>
-  </main>
+<!-- MAIN CONTENT -->
+<main class="main">
+  <img src="logo_culinaria_transparente.png" alt="Rainero Culinaria 4.0" class="hero-logo">
+  <p class="hero-subtitle">Plataforma Educativa de Gastronomía</p>
+  <div class="products">
+    <a href="https://appculinaria.pages.dev" class="product-card academia">
+      <div class="product-logo-float"><img src="logo_academia.jpg" alt="Rainero Academia" class="logo-academia-img"></div>
+      <div class="product-info"><h3>Rainero Academia</h3><p>Formación profesional para alumnos y docentes</p></div>
+      <span class="product-badge active">Activo</span>
+      <div class="product-arrow">→</div>
+    </a>
+    <a href="https://rainerokids.pages.dev" class="product-card kids">
+      <div class="product-logo-float"><img src="logo.png" alt="Rainero Kids" class="logo-kids-img"></div>
+      <div class="product-info"><h3>Rainero Kids</h3><p>Programa infantil para niños, teens y familias</p></div>
+      <span class="product-badge new">Nuevo</span>
+      <div class="product-arrow">→</div>
+    </a>
+  </div>
+</main>
 
-  <footer class="footer">
-    <p>Centro Municipal de Capacitación Laboral Santiago Rainero</p>
-    <p class="footer-dev">Desarrollado por Mercedes Recalde · Sistema Recalde</p>
-  </footer>
-</div>
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Centro Municipal de Capacitación Laboral Santiago Rainero</p>
+  <p class="footer-dev">Desarrollado por Tec. Sup. en Gastronomía Mercedes Recalde</p>
+</footer>
 
-<div class="modal-overlay" id="dev-modal" onclick="if(event.target===this)closeDevModal()">
+<!-- DEV LOGIN MODAL -->
+<div class="modal-overlay" id="dev-modal">
   <div class="modal">
     <div class="modal-header"><h2>🔐 Acceso Dev</h2><button class="modal-close" onclick="closeDevModal()">✕</button></div>
     <div class="modal-body">
-      <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px">Panel exclusivo para administración del ecosistema</p>
       <div class="form-group"><label>Email</label><input type="email" class="form-input" id="dev-email" placeholder="dev@sistemarecalde.com"></div>
-      <div class="form-group"><label>Clave</label><input type="password" class="form-input" id="dev-pass" placeholder="••••••••"></div>
+      <div class="form-group"><label>Contraseña</label><input type="password" class="form-input" id="dev-pass" placeholder="••••••••"></div>
+      <button class="btn-primary" onclick="loginDev()">Ingresar</button>
     </div>
-    <div class="modal-footer"><button class="btn" onclick="loginDev()">🚀 Ingresar</button></div>
   </div>
 </div>
 
+<!-- DEV PANEL -->
 <div class="dev-panel" id="dev-panel">
-  <header class="dev-header">
-    <button class="dev-back" onclick="closeDevPanel()">←</button>
-    <h1>Panel Dev</h1>
-    <span class="dev-badge">DEV</span>
-  </header>
+  <header class="dev-header"><button class="dev-back" onclick="closeDevPanel()">←</button><h1>Panel Dev</h1><span class="dev-badge">DEV</span></header>
   <div class="dev-content">
     <div class="dev-welcome"><h2>Bienvenida, Mercedes 👩‍💻</h2><p>Ecosistema Rainero Culinaria 4.0</p></div>
     <div class="dev-stats">
@@ -293,25 +389,32 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
     </div>
     <div class="dev-section">
       <h3 class="dev-section-title">Productos</h3>
-      <div class="dev-product academia" onclick="window.open('https://appculinaria.pages.dev','_blank')">
-        <div class="dev-product-icon">🎓</div>
-        <div class="dev-product-info"><h4>Rainero Academia</h4><p>Alumnos · Docentes · Admin</p></div>
-        <span class="dev-status live">LIVE</span>
-      </div>
-      <div class="dev-product kids" onclick="window.open('https://rainerokids.pages.dev','_blank')">
-        <div class="dev-product-icon">👶</div>
-        <div class="dev-product-info"><h4>Rainero Kids</h4><p>Kids · Teens · Familias · Profes</p></div>
-        <span class="dev-status live">LIVE</span>
-      </div>
-      <div class="dev-product planned">
-        <div class="dev-product-icon">🏆</div>
-        <div class="dev-product-info"><h4>Rainero Competencias</h4><p>Torneos y eventos</p></div>
-        <span class="dev-status planned">PLAN</span>
-      </div>
-      <div class="dev-product planned">
-        <div class="dev-product-icon">🍽️</div>
-        <div class="dev-product-info"><h4>Rainero Catering</h4><p>Gestión de servicios</p></div>
-        <span class="dev-status planned">PLAN</span>
+      <div class="dev-product academia" onclick="window.open('https://appculinaria.pages.dev','_blank')"><div class="dev-product-icon">🎓</div><div class="dev-product-info"><h4>Rainero Academia</h4><p>Alumnos · Docentes · Admin</p></div><span class="dev-status live">LIVE</span></div>
+      <div class="dev-product kids" onclick="window.open('https://rainerokids.pages.dev','_blank')"><div class="dev-product-icon">👶</div><div class="dev-product-info"><h4>Rainero Kids</h4><p>Kids · Teens · Familias · Profes</p></div><span class="dev-status live">LIVE</span></div>
+      <div class="dev-product planned"><div class="dev-product-icon">🏆</div><div class="dev-product-info"><h4>Rainero Competencias</h4><p>Torneos y eventos</p></div><span class="dev-status planned">PLAN</span></div>
+      <div class="dev-product planned"><div class="dev-product-icon">🍽️</div><div class="dev-product-info"><h4>Rainero Catering</h4><p>Gestión de servicios</p></div><span class="dev-status planned">PLAN</span></div>
+    </div>
+    <div class="dev-section">
+      <h3 class="dev-section-title">📝 Inscripciones Rainero Kids</h3>
+      <div class="dev-inscripcion-card">
+        <div class="dev-inscripcion-header">
+          <div class="dev-inscripcion-title"><img src="logo.png" alt="Vicente"><h4>Vacaciones de Verano</h4></div>
+          <label class="dev-toggle"><input type="checkbox" id="inscripcion-activa" checked onchange="toggleInscripcion()"><span class="dev-toggle-slider"></span></label>
+        </div>
+        <span class="dev-inscripcion-status open" id="inscripcion-status">✓ Inscripciones Abiertas</span>
+        <div class="dev-inscripcion-form">
+          <div class="dev-input-group"><label>Título del Programa</label><input type="text" id="inscripcion-titulo" value="Vacaciones de Verano"></div>
+          <div class="dev-inscripcion-row">
+            <div class="dev-input-group"><label>Período</label><input type="text" id="inscripcion-periodo" value="Febrero"></div>
+            <div class="dev-input-group"><label>Horario</label><input type="text" id="inscripcion-horario" value="10 a 12 hs"></div>
+          </div>
+          <div class="dev-inscripcion-row">
+            <div class="dev-input-group"><label>Cantidad de Clases</label><input type="text" id="inscripcion-clases" value="2 clases"></div>
+            <div class="dev-input-group"><label>Día</label><input type="text" id="inscripcion-dia" value="A confirmar"></div>
+          </div>
+          <div class="dev-input-group"><label>Recetas</label><textarea id="inscripcion-recetas">Figacitas de manteca · Bizcochitos · Alfajores de maicena · Cookies con chips</textarea></div>
+          <button class="dev-save-btn" onclick="saveInscripcion()">💾 Guardar Cambios</button>
+        </div>
       </div>
     </div>
     <div class="dev-section">
@@ -329,14 +432,111 @@ h1, h2, h3, h4 { font-family: 'Nunito', sans-serif; font-weight: 800; }
 <div class="toast" id="toast"></div>
 
 <script>
-let devClicks=0,clickTimer=null;
-document.getElementById('mvl-logo').addEventListener('click',function(){devClicks++;clearTimeout(clickTimer);if(devClicks>=3){devClicks=0;openDevModal();}else{clickTimer=setTimeout(()=>devClicks=0,1000);}});
-function openDevModal(){document.getElementById('dev-modal').classList.add('show');}
-function closeDevModal(){document.getElementById('dev-modal').classList.remove('show');document.getElementById('dev-email').value='';document.getElementById('dev-pass').value='';}
-function loginDev(){const email=document.getElementById('dev-email').value.trim(),pass=document.getElementById('dev-pass').value;if((email==='mercedes@sistemarecalde.com'||email==='mercedes.recalde@mvl.edu.ar')&&pass==='dev2025'){closeDevModal();document.getElementById('dev-panel').classList.add('show');showToast('🚀 Bienvenida!');}else{showToast('❌ Credenciales incorrectas');}}
-function closeDevPanel(){document.getElementById('dev-panel').classList.remove('show');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDevModal();closeDevPanel();}});
+var supabase = null;
+var devClicks = 0;
+var clickTimer = null;
+
+try {
+  if (window.supabase) {
+    supabase = window.supabase.createClient(
+      'https://dukgjrhyhyxvdqzhthje.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1a2dqcmh5aHl4dmRxemh0aGplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5MTQzNjIsImV4cCI6MjA4MzQ5MDM2Mn0.JYZWv2vYwMbTopyL-T8_kjbX2py5IL7Ap6ASZc2B4dM'
+    );
+  }
+} catch(e) { }
+
+function handleMvlClick() {
+  devClicks++;
+  clearTimeout(clickTimer);
+  if (devClicks >= 3) { 
+    devClicks = 0; 
+    openDevModal(); 
+  } else { 
+    clickTimer = setTimeout(function() { devClicks = 0; }, 1000); 
+  }
+}
+
+function openDevModal() { 
+  document.getElementById('dev-modal').classList.add('show'); 
+}
+
+function closeDevModal() { 
+  document.getElementById('dev-modal').classList.remove('show'); 
+  document.getElementById('dev-email').value = ''; 
+  document.getElementById('dev-pass').value = ''; 
+}
+
+function loginDev() {
+  var email = document.getElementById('dev-email').value.trim();
+  var pass = document.getElementById('dev-pass').value;
+  if ((email === 'mercedes@sistemarecalde.com' || email === 'mercedes.recalde@mvl.edu.ar') && pass === 'dev2025') {
+    closeDevModal(); 
+    document.getElementById('dev-panel').classList.add('show'); 
+    showToast('🚀 Bienvenida!'); 
+    loadInscripcionFromDB();
+  } else { 
+    showToast('❌ Credenciales incorrectas'); 
+  }
+}
+
+function closeDevPanel() { 
+  document.getElementById('dev-panel').classList.remove('show'); 
+}
+
+function showToast(msg) { 
+  var t = document.getElementById('toast'); 
+  t.textContent = msg; 
+  t.classList.add('show'); 
+  setTimeout(function() { t.classList.remove('show'); }, 3000); 
+}
+
+function toggleInscripcion() {
+  var cb = document.getElementById('inscripcion-activa');
+  var st = document.getElementById('inscripcion-status');
+  if (cb.checked) { 
+    st.className = 'dev-inscripcion-status open'; 
+    st.textContent = '✓ Inscripciones Abiertas'; 
+  } else { 
+    st.className = 'dev-inscripcion-status closed'; 
+    st.textContent = '✗ Inscripciones Cerradas'; 
+  }
+}
+
+function saveInscripcion() {
+  if (!supabase) { showToast('⚠️ Sin conexión a DB'); return; }
+  var data = { 
+    activa: document.getElementById('inscripcion-activa').checked, 
+    titulo: document.getElementById('inscripcion-titulo').value, 
+    periodo: document.getElementById('inscripcion-periodo').value, 
+    horario: document.getElementById('inscripcion-horario').value, 
+    clases: document.getElementById('inscripcion-clases').value, 
+    dia: document.getElementById('inscripcion-dia').value, 
+    recetas: document.getElementById('inscripcion-recetas').value, 
+    updated_at: new Date().toISOString() 
+  };
+  supabase.from('inscripciones_config').update(data).eq('programa', 'kids')
+    .then(function(res) { 
+      if (res.error) { showToast('❌ Error'); } 
+      else { showToast('✅ Guardado'); }
+    });
+}
+
+function loadInscripcionFromDB() {
+  if (!supabase) return;
+  supabase.from('inscripciones_config').select('*').eq('programa', 'kids').single()
+    .then(function(res) {
+      if (res.data) { 
+        document.getElementById('inscripcion-activa').checked = res.data.activa; 
+        document.getElementById('inscripcion-titulo').value = res.data.titulo || ''; 
+        document.getElementById('inscripcion-periodo').value = res.data.periodo || ''; 
+        document.getElementById('inscripcion-horario').value = res.data.horario || ''; 
+        document.getElementById('inscripcion-clases').value = res.data.clases || ''; 
+        document.getElementById('inscripcion-dia').value = res.data.dia || ''; 
+        document.getElementById('inscripcion-recetas').value = res.data.recetas || ''; 
+        toggleInscripcion(); 
+      }
+    });
+}
 </script>
 </body>
 </html>
