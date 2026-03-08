@@ -3605,7 +3605,7 @@
         const { data: user, error } = await db.from('usuarios').insert({ nombre, apellido, dni, email, rol: 'alumno' }).select().single();
         if (error) { showError('registro', 'Error: ' + error.message); return; }
 
-        await db.from('inscripciones').insert({ usuario_id: user.id, curso_id: parseInt(cursoId) });
+        await db.from('inscripciones').insert({ alumno_id: user.id, curso_id: parseInt(cursoId) });
 
         currentUser = user;
         userRole = 'alumno';
@@ -3743,7 +3743,7 @@
     async function renderCursos() {
       let cursosToShow = cursos;
       if (userRole === 'alumno') {
-        const { data: inscripciones } = await db.from('inscripciones').select('curso_id').eq('usuario_id', currentUser.id);
+        const { data: inscripciones } = await db.from('inscripciones').select('curso_id').eq('alumno_id', currentUser.id);
         const cursosIds = inscripciones?.map(i => i.curso_id) || [];
         cursosToShow = cursos.filter(c => cursosIds.includes(c.id));
       }
@@ -3893,7 +3893,7 @@
     function selFecha(dia) { selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dia); renderCalendario(); renderAsistencia(); }
 
     async function renderAsistencia() {
-      const { data: inscripciones } = await db.from('inscripciones').select('usuario_id, usuarios(id, nombre, apellido)').eq('curso_id', currentCursoId);
+      const { data: inscripciones } = await db.from('inscripciones').select('alumno_id, usuarios(id, nombre, apellido)').eq('curso_id', currentCursoId);
       const alumnos = inscripciones?.map(i => i.usuarios).filter(u => u) || [];
       const fechaStr = selectedDate.toISOString().split('T')[0];
 
@@ -4125,7 +4125,7 @@
 
     async function filtrarAlumnos() {
       const cursoId = document.getElementById('filtro-curso')?.value;
-      let query = db.from('inscripciones').select('usuario_id, curso_id, usuarios(id, nombre, apellido, dni, email), cursos(nombre, color)');
+      let query = db.from('inscripciones').select('alumno_id, curso_id, usuarios(id, nombre, apellido, dni, email), cursos(nombre, color)');
       if (cursoId) query = query.eq('curso_id', cursoId);
       const { data } = await query;
 
@@ -4144,7 +4144,7 @@
       currentAlumnoId = id;
       hideViews(); show('view-perfil');
       const { data: user } = await db.from('usuarios').select('*').eq('id', id).single();
-      const { data: insc } = await db.from('inscripciones').select('cursos(nombre)').eq('usuario_id', id).single();
+      const { data: insc } = await db.from('inscripciones').select('cursos(nombre)').eq('alumno_id', id).single();
 
       document.getElementById('perfil-avatar').textContent = user?.nombre?.charAt(0) || '?';
       document.getElementById('perfil-nombre').textContent = (user?.nombre || '') + ' ' + (user?.apellido || '');
