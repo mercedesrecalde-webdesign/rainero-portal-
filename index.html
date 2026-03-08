@@ -3833,10 +3833,11 @@
           icono = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>';
           btnTexto = 'Ver';
         }
+        const clickAbrir = c.url ? `onclick="window.open('${c.url}', '_blank')" style="cursor:pointer;"` : '';
         return `
         <div class="contenido-item">
-          <div class="contenido-icon">${icono}</div>
-          <div class="contenido-info"><h4>${c.titulo}</h4><p>${c.tipo}${c.archivo_nombre ? ' • ' + c.archivo_nombre : ''}</p></div>
+          <div class="contenido-icon" ${clickAbrir}>${icono}</div>
+          <div class="contenido-info" ${clickAbrir}><h4>${c.titulo}</h4><p>${c.tipo}${c.archivo_nombre ? ' • ' + c.archivo_nombre : ''}</p></div>
           ${c.url ? `<button class="btn-download" onclick="window.open('${c.url}', '_blank')">${btnTexto}</button>` : '<button class="btn-download" disabled style="opacity:0.5">Sin link</button>'}
           ${isDocenteOrAdmin ? `<button class="btn btn-small btn-danger" onclick="eliminarContenido('${c.id}')" style="margin-left:8px;">✕</button>` : ''}
         </div>
