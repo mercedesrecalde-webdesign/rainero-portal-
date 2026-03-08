@@ -4125,18 +4125,38 @@
 
     async function filtrarAlumnos() {
       const cursoId = document.getElementById('filtro-curso')?.value;
-      let query = db.from('inscripciones').select('alumno_id, curso_id, usuarios(id, nombre, apellido, dni, email), cursos(nombre, color)');
+      let query = db.from('inscripciones').select('*');
       if (cursoId) query = query.eq('curso_id', cursoId);
-      const { data } = await query;
+      const { data: inscripciones } = await query;
+      
+      if (!inscripciones?.length) {
+        document.getElementById('alumnos-lista').innerHTML = '<div class="empty-state"><p>No hay alumnos</p></div>';
+        return;
+      }
+      
+      // Obtener datos de usuarios y cursos
+      const alumnoIds = inscripciones.map(i => i.alumno_id);
+      const cursoIds = [...new Set(inscripciones.map(i => i.curso_id))];
+      
+      const { data: usuarios } = await db.from('usuarios').select('*').in('id', alumnoIds);
+      const { data: cursos } = await db.from('cursos').select('*').in('id', cursoIds);
+      
+      const usuariosMap = {};
+      usuarios?.forEach(u => usuariosMap[u.id] = u);
+      const cursosMap = {};
+      cursos?.forEach(c => cursosMap[c.id] = c);
 
-      document.getElementById('alumnos-lista').innerHTML = data?.length ? data.map(i => `
-        <div class="table-row" onclick="showPerfil('${i.usuarios?.id}')">
-          <span class="alumno-nombre"><div class="alumno-avatar">${i.usuarios?.nombre?.charAt(0) || '?'}</div>${i.usuarios?.nombre} ${i.usuarios?.apellido || ''}</span>
-          <span>${i.usuarios?.dni || '-'}</span>
-          <span>${i.usuarios?.email || ''}</span>
-          <span class="curso-tag ${i.cursos?.color || ''}">${i.cursos?.nombre?.split(' ')[0] || ''}</span>
+      document.getElementById('alumnos-lista').innerHTML = inscripciones.map(i => {
+        const u = usuariosMap[i.alumno_id] || {};
+        const c = cursosMap[i.curso_id] || {};
+        return `
+        <div class="table-row" onclick="showPerfil('${u.id}')">
+          <span class="alumno-nombre"><div class="alumno-avatar">${u.nombre?.charAt(0) || '?'}</div>${u.nombre || ''} ${u.apellido || ''}</span>
+          <span>${u.dni || '-'}</span>
+          <span>${u.email || ''}</span>
+          <span class="curso-tag ${c.color || ''}">${c.nombre?.split(' ')[0] || ''}</span>
         </div>
-      `).join('') : '<div class="empty-state"><p>No hay alumnos</p></div>';
+      `}).join('');
     }
 
     // ========== PERFIL ==========
