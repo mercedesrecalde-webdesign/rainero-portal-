@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intranet Corporativa · Gestión Gastronómica</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060913;
+    --surface: #0b1329;
+    --surface-light: #1c2541;
+    --border: rgba(0, 180, 216, 0.15);
+    --accent-cyan: #00b4d8;
+    --accent-emerald: #06d6a0;
+    --accent-gold: #ffd166;
+    --accent-rose: #ef476f;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --font-main: 'Outfit', sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    color: var(--text);
+    font-family: var(--font-main);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    background: #020408;
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+  @media (max-width: 1024px) {
+    .sidebar { display: none; }
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .brand span { color: var(--accent-cyan); }
+  
+  .nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .nav-item {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    padding: 0.85rem 1.25rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover, .nav-item.active {
+    background: rgba(255, 255, 255, 0.02);
+    color: #fff;
+  }
+  .nav-item.active {
+    border-color: rgba(0, 180, 216, 0.2);
+    background: rgba(0, 180, 216, 0.05);
+    color: var(--accent-cyan);
+    font-weight: 500;
+  }
+
+  /* MAIN CONTENT */
+  .main-content {
+    flex: 1;
+    padding: 3rem;
+    max-width: 1200px;
+  }
+  @media (max-width: 768px) {
+    .main-content { padding: 1.5rem; }
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding-bottom: 1.5rem;
+  }
+  .header-title h1 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    margin-bottom: 0.3rem;
+    background: linear-gradient(to right, #fff, #cbd5e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header-title p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .user-pill {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .user-pill .status {
+    width: 8px; height: 8px;
+    background: var(--accent-emerald);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-emerald);
+  }
+
+  /* GRID DE METRICAS (KPIs) */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .kpi-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0, 180, 216, 0.3);
+  }
+  .kpi-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+  }
+  .kpi-value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .kpi-sub {
+    font-size: 0.85rem;
+    color: var(--accent-cyan);
+  }
+
+  /* ORGANIGRAMA / DEPARTAMENTOS */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 24px;
+    background: var(--accent-cyan);
+    border-radius: 2px;
+  }
+  
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .dept-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: background 0.2s ease;
+  }
+  .dept-card:hover {
+    background: rgba(11, 19, 41, 0.6);
+  }
+  .dept-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dept-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .dept-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .member-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .member-item {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .member-item::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+  }
+  .dept-footer {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: var(--accent-gold);
+    border-top: 1px solid rgba(255,255,255,0.03);
+    padding-top: 0.75rem;
+  }
+
+  /* TABLERO DE TAREAS (KANBAN STYLE) */
+  .kanban {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .kanban-col {
+    background: rgba(255,255,255,0.01);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+  .col-title {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .col-count {
+    background: rgba(255,255,255,0.03);
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .task-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    transition: all 0.2s ease;
+  }
+  .task-card:hover {
+    border-color: rgba(0, 180, 216, 0.3);
+    background: var(--surface-light);
+    transform: translateY(-2px);
+  }
+  .task-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  .task-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .task-tags {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+  .task-dept {
+    font-weight: 700;
+  }
+  .task-date {
+    color: var(--accent-rose);
+    font-family: var(--font-display);
+  }
+
+  /* Colores para tags de departamentos */
+  .tag-d1 { color: var(--accent-cyan); }
+  .tag-d2 { color: var(--accent-emerald); }
+  .tag-d3 { color: var(--accent-gold); }
+  .tag-d4 { color: #a855f7; }
+
+  /* JUNTA DIRECTIVA */
+  .board-box {
+    background: linear-gradient(135deg, var(--surface), rgba(11, 19, 41, 0.3));
+    border: 1px solid var(--border);
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 4rem;
+  }
+  .board-box p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+  .board-list {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .board-list li {
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .board-list li::before {
+    content: '✦';
+    color: var(--accent-cyan);
+  }
+  .board-list li.muted {
+    color: var(--text-muted);
+  }
+  .board-list li.muted::before {
+    color: var(--text-muted);
+  }
+
+  /* FOOTER */
+  .board-footer {
+    text-align: center;
+    padding: 2.5rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <span>✦</span> GastroCorp S.A.
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item active" id="nav-dashboard">📊 Dashboard</li>
+      <li class="nav-item" id="nav-calendar">📅 Calendario</li>
+      <li class="nav-item">👥 Equipo</li>
+      <li class="nav-item" id="nav-files">📁 Archivos</li>
+      <li class="nav-item" id="nav-settings">⚙️ Configuración</li>
+    </ul>
+    <div style="margin-top: auto; font-size: 0.85rem; color: var(--text-muted);">
+      <p>Entorno de Simulación</p>
+      <p style="color: var(--accent-cyan); font-weight: 500;">Docente: Mercedes Recalde</p>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- HEADER -->
+    <header>
+      <div class="header-title">
+        <h1>Tablero de Control</h1>
+        <p>Monitoreo de proyectos, presupuestos y análisis financiero.</p>
+      </div>
+      <div class="user-pill">
+        <div class="status"></div>
+        <span>Empresa Conectada</span>
+      </div>
+    </header>
+
+    <div id="content-dashboard">
+    <!-- KPI GRID -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Food Cost Promedio</div>
+        <div class="kpi-value">32%</div>
+        <div class="kpi-sub">Objetivo: Menor al 35%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Margen de Contribución</div>
+        <div class="kpi-value">68%</div>
+        <div class="kpi-sub">Promedio del Menú</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Punto de Equilibrio</div>
+        <div class="kpi-value">450 u.</div>
+        <div class="kpi-sub">Ventas mínimas mensuales</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Utilidad Neta Proyectada</div>
+        <div class="kpi-value">$180.000</div>
+        <div class="kpi-sub">Mes 1 (Escenario Base)</div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN GRÁFICOS -->
+    <div class="section-title">Análisis Visual de Control</div>
+    <div style="background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-radius: 20px; margin-bottom: 3.5rem;">
+      <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+        
+        <!-- Gráfico 1: Composición del Precio -->
+        <div style="flex: 1; min-width: 250px;">
+          <h4 style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;">Composición del Precio de Venta</h4>
+          <div style="display: flex; height: 30px; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,0.05);">
+            <div style="width: 32%; background: var(--accent-cyan); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #000;">FC 32%</div>
+            <div style="width: 40%; background: var(--accent-emerald); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #000;">MC 40%</div>
+            <div style="width: 28%; background: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #000;">G 28%</div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+            <span>🔵 Food Cost</span>
+            <span>🟢 Margen Cont.</span>
+            <span>🟡 Gastos/Utilidad</span>
+          </div>
+        </div>
+
+        <!-- Gráfico 2: Punto de Equilibrio -->
+        <div style="flex: 1; min-width: 250px;">
+          <h4 style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;">Punto de Equilibrio (Progreso)</h4>
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="flex: 1; height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden;">
+              <div style="width: 75%; height: 100%; background: linear-gradient(to right, var(--accent-cyan), var(--accent-emerald)); border-radius: 6px;"></div>
+            </div>
+            <span style="font-family: var(--font-display); font-weight: 700;">75%</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+            <span>Ventas actuales: 337 u.</span>
+            <span>Objetivo PE: 450 u.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECCION EQUIPO -->
+    <div class="section-title">Estructura Corporativa</div>
+    <p style="color: var(--text-muted); margin-top: -1rem; margin-bottom: 1.5rem; font-size: 0.95rem;">*Los equipos y departamentos son asignados por la docente (por sorteo o según perfiles).</p>
+    
+    <div class="dept-grid">
+      
+      <!-- Dept 1 -->
+      <div class="dept-card">
+        <div class="dept-header">
+          <div class="dept-name">Costos y Fichas Técnicas</div>
+          <div class="dept-tag tag-d1">Dpto 1</div>
+        </div>
+        <ul class="member-list">
+          <li class="member-item">[Alumno 1]</li>
+          <li class="member-item">[Alumno 2]</li>
+        </ul>
+        <div class="dept-footer">Foco: Fichas técnicas y merma.</div>
+      </div>
+
+      <!-- Dept 2 -->
+      <div class="dept-card">
+        <div class="dept-header">
+          <div class="dept-name">Presupuesto y Operaciones</div>
+          <div class="dept-tag tag-d2">Dpto 2</div>
+        </div>
+        <ul class="member-list">
+          <li class="member-item">[Alumno 3]</li>
+          <li class="member-item">[Alumno 4]</li>
+        </ul>
+        <div class="dept-footer">Foco: Gastos fijos y presupuesto.</div>
+      </div>
+
+      <!-- Dept 3 -->
+      <div class="dept-card">
+        <div class="dept-header">
+          <div class="dept-name">Precios y Proyecciones</div>
+          <div class="dept-tag tag-d3">Dpto 3</div>
+        </div>
+        <ul class="member-list">
+          <li class="member-item">[Alumno 5]</li>
+          <li class="member-item">[Alumno 6]</li>
+        </ul>
+        <div class="dept-footer">Foco: CMu y Estado Proyectado.</div>
+      </div>
+
+      <!-- Dept 4 -->
+      <div class="dept-card">
+        <div class="dept-header">
+          <div class="dept-name">Punto de Equilibrio</div>
+          <div class="dept-tag tag-d4">Dpto 4</div>
+        </div>
+        <ul class="member-list">
+          <li class="member-item">[Alumno 7]</li>
+          <li class="member-item">[Alumno 8]</li>
+        </ul>
+        <div class="dept-footer">Foco: PE y análisis inflacionario.</div>
+      </div>
+
+    </div>
+
+    <!-- SECCION KANBAN -->
+    <!-- SECCION ROADMAP -->
+    <div class="section-title">Roadmap del Proyecto (Control de Avance)</div>
+    <div style="background: var(--surface); border: 1px solid var(--border); padding: 1.5rem; border-radius: 15px; margin-bottom: 3.5rem; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+        <thead>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+            <th style="padding: 1rem;">Fase / Entregable</th>
+            <th style="padding: 1rem;">Fecha Límite</th>
+            <th style="padding: 1rem;">Responsable</th>
+            <th style="padding: 1rem;">Estado / Avance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Fase 1 -->
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.02);">
+            <td style="padding: 1rem;">
+              <div style="font-weight: 600; color: #fff;">Fase 1: Fichas Técnicas Base</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Costo de MP con factor de corrección.</div>
+            </td>
+            <td style="padding: 1rem; color: var(--accent-cyan); font-family: var(--font-display);">02 de Junio</td>
+            <td style="padding: 1rem;"><span class="dept-tag tag-d1">Dpto 1</span></td>
+            <td style="padding: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; width: 100px;">
+                  <div style="width: 100%; height: 100%; background: var(--accent-emerald);"></div>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--accent-emerald); font-weight: 600;">100%</span>
+              </div>
+            </td>
+          </tr>
+          <!-- Fase 2 -->
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.02);">
+            <td style="padding: 1rem;">
+              <div style="font-weight: 600; color: #fff;">Fase 2: Presupuesto Operativo</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Costos fijos y Presupuesto Económico.</div>
+            </td>
+            <td style="padding: 1rem; color: var(--accent-cyan); font-family: var(--font-display);">09 de Junio</td>
+            <td style="padding: 1rem;"><span class="dept-tag tag-d2">Dpto 2</span></td>
+            <td style="padding: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; width: 100px;">
+                  <div style="width: 40%; height: 100%; background: var(--accent-gold);"></div>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--accent-gold); font-weight: 600;">40%</span>
+              </div>
+            </td>
+          </tr>
+          <!-- Fase 3 -->
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.02);">
+            <td style="padding: 1rem;">
+              <div style="font-weight: 600; color: #fff;">Fase 3: Proyección a 3 Meses</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">CMu y Estado de Resultados Proyectado.</div>
+            </td>
+            <td style="padding: 1rem; color: var(--accent-cyan); font-family: var(--font-display);">16 de Junio</td>
+            <td style="padding: 1rem;"><span class="dept-tag tag-d3">Dpto 3</span></td>
+            <td style="padding: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; width: 100px;">
+                  <div style="width: 0%; height: 100%; background: var(--accent-rose);"></div>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Pendiente</span>
+              </div>
+            </td>
+          </tr>
+          <!-- Fase 4 -->
+          <tr>
+            <td style="padding: 1rem;">
+              <div style="font-weight: 600; color: #fff;">Fase 4: Punto de Equilibrio</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Cálculo de PE y análisis inflacionario.</div>
+            </td>
+            <td style="padding: 1rem; color: var(--accent-cyan); font-family: var(--font-display);">23 de Junio</td>
+            <td style="padding: 1rem;"><span class="dept-tag tag-d4">Dpto 4</span></td>
+            <td style="padding: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; width: 100px;">
+                  <div style="width: 0%; height: 100%; background: var(--accent-rose);"></div>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Pendiente</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- JUNTA DIRECTIVA -->
+    <div class="section-title">Comité Evaluador (Junta Directiva)</div>
+    <div class="board-box">
+      <p>La defensa final del proyecto se realizará el **30 de Junio** ante la Junta Directiva conformada por:</p>
+      <ul class="board-list">
+        <li>Director de carrera Alberto Radici</li>
+        <li>Dra. Delia Mariluis</li>
+        <li>Prof Tec Sup Mercedes Recalde</li>
+        <li class="muted">Docente veedor</li>
+      </ul>
+    </div>
+
+    </div> <!-- Fin de content-dashboard -->
+
+    <!-- CONTENIDO CALENDARIO -->
+    <div id="content-calendar" style="display:none; width: 100%;">
+      <div class="section-title">Calendario de Entregas</div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+        <h3>📅 Sincronización con Google Calendar</h3>
+        <p style="color: var(--text-muted); margin-top: 0.5rem; margin-bottom: 1.5rem;">Para que el sistema les avise por mail 2 días antes de cada entrega, los estudiantes deben suscribirse al calendario oficial de la empresa. Esto forma parte de la evaluación de organización.</p>
+        <button style="background: var(--accent-cyan); color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer;" onclick="alert('Aquí iría el link público a tu Google Calendar para que se suscriban.')">
+          🔗 Conectar con Google Calendar
+        </button>
+      </div>
+
+      <div class="kanban">
+        <div class="kanban-col">
+          <div class="col-title">
+            <span>Recordatorios Automáticos</span>
+            <span class="col-count">Mails</span>
+          </div>
+          <div class="task-card">
+            <div class="task-title">Alerta Fase 1</div>
+            <div class="task-desc">Aviso automático por mail el 31/05 (2 días antes).</div>
+            <div class="task-tags"><span class="task-dept tag-d1">Dpto 1</span></div>
+          </div>
+          <div class="task-card">
+            <div class="task-title">Alerta Fase 2</div>
+            <div class="task-desc">Aviso automático por mail el 07/06 (2 días antes).</div>
+            <div class="task-tags"><span class="task-dept tag-d2">Dpto 2</span></div>
+          </div>
+          <div class="task-card">
+            <div class="task-title">Alerta Fase 3</div>
+            <div class="task-desc">Aviso automático por mail el 14/06 (2 días antes).</div>
+            <div class="task-tags"><span class="task-dept tag-d3">Dpto 3</span></div>
+          </div>
+          <div class="task-card">
+            <div class="task-title">Alerta Fase 4</div>
+            <div class="task-desc">Aviso automático por mail el 21/06 (2 días antes).</div>
+            <div class="task-tags"><span class="task-dept tag-d4">Dpto 4</span></div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- Fin de content-calendar -->
+
+    <!-- CONTENIDO ARCHIVOS -->
+    <div id="content-files" style="display:none; width: 100%;">
+      <div class="section-title">Repositorio de Archivos</div>
+      
+      <div class="kanban" style="grid-template-columns: 1fr;">
+        <div class="kanban-col">
+          <div class="col-title">Archivos Disponibles</div>
+          
+          <!-- File 1 -->
+          <div class="task-card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+            <div>
+              <div class="task-title">📄 Plantilla_Ficha_Tecnica.xlsx</div>
+              <div class="task-desc">Modelo oficial para el costeo de ingredientes.</div>
+            </div>
+            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;" onclick="alert('Aquí se descargaría la plantilla.')">Descargar</button>
+          </div>
+
+          <!-- File 2 -->
+          <div class="task-card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+            <div>
+              <div class="task-title">📄 Modelo_Presupuesto.xlsx</div>
+              <div class="task-desc">Estructura para el presupuesto mensual.</div>
+            </div>
+            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;" onclick="alert('Aquí se descargaría el modelo.')">Descargar</button>
+          </div>
+
+          <!-- File 3 -->
+          <div class="task-card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+            <div>
+              <div class="task-title">📕 Manual_Costos_Gastronomicos.pdf</div>
+              <div class="task-desc">Guía teórica de la materia.</div>
+            </div>
+            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;" onclick="alert('Aquí se descargaría el manual.')">Descargar</button>
+          </div>
+
+          <!-- File 4 -->
+          <div class="task-card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+            <div>
+              <div class="task-title">📕 Manual_Capacitacion_Personal.pdf</div>
+              <div class="task-desc">Guía para el entrenamiento del staff y costos asociados.</div>
+            </div>
+            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;" onclick="alert('Aquí se descargaría el manual de capacitación.')">Descargar</button>
+          </div>
+
+          <!-- File 5 -->
+          <div class="task-card" style="flex-direction: row; justify-content: space-between; align-items: center;">
+            <div>
+              <div class="task-title">📄 Plan_Promociones_Estrategicas.docx</div>
+              <div class="task-desc">Modelos de combos y descuentos para analizar impacto en margen.</div>
+            </div>
+            <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;" onclick="alert('Aquí se descargaría el plan de promociones.')">Descargar</button>
+          </div>
+        </div>
+      </div>
+    </div> <!-- Fin de content-files -->
+
+    <!-- CONTENIDO CONFIGURACIÓN -->
+    <div id="content-settings" style="display:none; width: 100%;">
+      <div class="section-title">Configuración de la Simulación</div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-radius: 15px;">
+        <h3 style="margin-bottom: 1.5rem;">⚙️ Parámetros del Mercado</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Nombre de la Empresa</label>
+            <input type="text" value="GastroCorp S.A." style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.75rem; border-radius: 8px; width: 100%; max-width: 400px;">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tasa de Inflación Mensual (%)</label>
+            <input type="number" value="10" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.75rem; border-radius: 8px; width: 100%; max-width: 200px;">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Comisión MercadoPago (%)</label>
+            <input type="number" value="6.5" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.75rem; border-radius: 8px; width: 100%; max-width: 200px;">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Costo de Delivery base ($)</label>
+            <input type="number" value="1500" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.75rem; border-radius: 8px; width: 100%; max-width: 200px;">
+          </div>
+        </div>
+      </div>
+    </div> <!-- Fin de content-settings -->
+
+    <script>
+      const navDashboard = document.getElementById('nav-dashboard');
+      const navCalendar = document.getElementById('nav-calendar');
+      const navFiles = document.getElementById('nav-files');
+      const navSettings = document.getElementById('nav-settings');
+      
+      const contentDashboard = document.getElementById('content-dashboard');
+      const contentCalendar = document.getElementById('content-calendar');
+      const contentFiles = document.getElementById('content-files');
+      const contentSettings = document.getElementById('content-settings');
+
+      const tabs = [
+        { nav: navDashboard, content: contentDashboard },
+        { nav: navCalendar, content: contentCalendar },
+        { nav: navFiles, content: contentFiles },
+        { nav: navSettings, content: contentSettings }
+      ];
+
+      tabs.forEach(tab => {
+        if(tab.nav) {
+          tab.nav.addEventListener('click', () => {
+            tabs.forEach(t => {
+              if(t.nav) t.nav.classList.remove('active');
+              if(t.content) t.content.style.display = 'none';
+            });
+            tab.nav.classList.add('active');
+            tab.content.style.display = 'block';
+          });
+        }
+      });
+    </script>
+
+    <!-- FOOTER -->
+    <div class="board-footer">
+      <p>Entorno de Simulación Corporativa · Gestión Gastronómica · 2026</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
